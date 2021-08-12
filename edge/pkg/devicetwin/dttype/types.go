@@ -9,7 +9,6 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/kubeedge/kubeedge/edge/pkg/devicetwin/dtclient"
-	"github.com/kubeedge/kubeedge/edge/pkg/devicetwin/dtcommon"
 )
 
 //Device the struct of device
@@ -254,34 +253,6 @@ func UnmarshalDeviceTwinUpdate(payload []byte) (*DeviceTwinUpdate, error) {
 	}
 	if deviceTwinUpdate.Twin == nil {
 		return &deviceTwinUpdate, ErrorUpdate
-	}
-	for key, value := range deviceTwinUpdate.Twin {
-		match := dtcommon.ValidateTwinKey(key)
-		if !match {
-			return &deviceTwinUpdate, ErrorKey
-		}
-		if value != nil {
-			if value.Expected != nil {
-				if value.Expected.Value != nil {
-					if *value.Expected.Value != "" {
-						match := dtcommon.ValidateTwinValue(*value.Expected.Value)
-						if !match {
-							return &deviceTwinUpdate, ErrorValue
-						}
-					}
-				}
-			}
-			if value.Actual != nil {
-				if value.Actual.Value != nil {
-					if *value.Actual.Value != "" {
-						match := dtcommon.ValidateTwinValue(*value.Actual.Value)
-						if !match {
-							return &deviceTwinUpdate, ErrorValue
-						}
-					}
-				}
-			}
-		}
 	}
 	return &deviceTwinUpdate, nil
 }
